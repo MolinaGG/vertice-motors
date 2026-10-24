@@ -11,16 +11,20 @@ export default function VehicleAnnotations({bridge,ready,chapter}){
   const limit=(value,max)=>Math.max(-max,Math.min(max,value));
   function draw(projection){
    last.current=projection;if(!layout)return;
-   const {points,reference}=projection,{width,height,base,bounds,compact}=layout;
-   const positions=followCallouts(points,reference,base,bounds);
+   const {points,reference,carBounds,referenceCarBounds}=projection,{width,height,base,bounds,compact}=layout;
+   const positions=followCallouts(points,reference,base,bounds,carBounds,referenceCarBounds);
    positions.forEach((position,index)=>{
     // The card and both connector ends use the same projected frame.
+    labels.current[index].style.opacity=position.hidden?'0':'1';
     labels.current[index].style.transform=`translate3d(${position.left-base[index].left}px,${position.top-base[index].top}px,0)`;
-    const target={...position,right:position.left+position.width},side=compact?(index===0?'above':'below'):(index===0?'left':'right');
+    const target={...position,right:position.left+position.width},side=carBounds?(position.left>=carBounds.right?'right':position.left+position.width<=carBounds.left?'left':position.top+position.height<=carBounds.top?'above':'below'):(compact?(index===0?'above':'below'):(index===0?'left':'right'));
     const line=calloutGeometry(points[index],target,side,width,height),point=points[index];
     paths.current[index].setAttribute('d',line.path);dots.current[index].setAttribute('transform',`translate(${Number.isFinite(point?.x)?point.x:0} ${Number.isFinite(point?.y)?point.y:0})`);
-    paths.current[index].style.opacity=line.visible?'1':'0';dots.current[index].style.opacity=line.visible?'1':'0';
+    paths.current[index].style.opacity=line.visible&&!position.hidden?'1':'0';dots.current[index].style.opacity=line.visible&&!position.hidden?'1':'0';
    });
+   const trails=hero.querySelector('.wheel-trails');let visibleTrail=false;
+   projection.trails?.forEach((trail,index)=>{const valid=[trail.start.x,trail.start.y,trail.end.x,trail.end.y].every(Number.isFinite),length=Math.hypot(trail.end.x-trail.start.x,trail.end.y-trail.start.y);visibleTrail ||=valid&&length>1;const gradient=trails?.querySelector(`#wheel-red-gradient-${index}`);if(gradient&&valid){gradient.setAttribute('x1',String(trail.start.x));gradient.setAttribute('y1',String(trail.start.y));gradient.setAttribute('x2',String(trail.end.x));gradient.setAttribute('y2',String(trail.end.y));}trails?.querySelectorAll(`.wheel-trail:nth-of-type(${index+1}) path`).forEach(path=>path.setAttribute('d',valid?`M${trail.start.x},${trail.start.y} L${trail.end.x},${trail.end.y}`:''));});
+   if(trails)trails.style.opacity=visibleTrail?'1':'0';
    const dx=points.reduce((sum,p,i)=>sum+p.x-reference[i].x,0)/points.length,dy=points.reduce((sum,p,i)=>sum+p.y-reference[i].y,0)/points.length;
    hero.style.setProperty('--copy-x',`${limit(dx*(compact?.1:.2),compact?8:48)}px`);
    hero.style.setProperty('--copy-y',`${limit(dy*.12,compact?5:14)}px`);
@@ -33,7 +37,7 @@ export default function VehicleAnnotations({bridge,ready,chapter}){
    else textBottom=Math.max(...[...copy.children].map(panel=>panel.offsetTop+panel.offsetHeight));
    const caption=hero.querySelector('.scene-caption');
    layout={width,height,base,compact,bounds:{left:compact?16:24,right:width-(compact?16:24),top:textBottom+(compact?18:30),bottom:caption.offsetTop-20}};
-   svg.setAttribute('viewBox',`0 0 ${width} ${height}`);if(last.current)draw(last.current);
+   svg.setAttribute('viewBox',`0 0 ${width} ${height}`);hero.querySelector('.wheel-trails')?.setAttribute('viewBox',`0 0 ${width} ${height}`);if(last.current)draw(last.current);
   }
   const observer=new ResizeObserver(measure);observer.observe(node);labels.current.forEach(label=>observer.observe(label));
   hero.querySelectorAll('.hero-title,.hero-intro').forEach(panel=>observer.observe(panel));

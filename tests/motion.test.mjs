@@ -17,7 +17,7 @@ test('3D camera path is bounded, continuous and reversible',async()=>{
  const {carPose}=await import('../lib/domain/motion.mjs');
  assert.deepEqual(carPose(-1),carPose(0));assert.deepEqual(carPose(2),carPose(1));assert.deepEqual(carPose(NaN),carPose(0));
  const start=carPose(0),middle=carPose(.5),end=carPose(1);
- assert.ok(end.rotation-start.rotation>Math.PI/2);assert.ok(middle.scale>start.scale);
+ assert.equal(end.rotation,start.rotation);assert.equal(middle.scale,start.scale);
  for(let i=0;i<=100;i++){
   const a=carPose(i/100),b=carPose((i+.001)/100);
   assert.ok(Object.values(a).every(Number.isFinite));assert.ok(a.scale>=.9&&a.scale<=1.2);
@@ -25,10 +25,10 @@ test('3D camera path is bounded, continuous and reversible',async()=>{
  }
  assert.deepEqual(carPose(.25),carPose(.25));
 });
-test('car travels across the stage as scroll advances, with depth in the middle',async()=>{
+test('car travels across the stage as scroll advances on a straight path',async()=>{
  const {carPose}=await import('../lib/domain/motion.mjs');
- assert.ok(carPose(0).x>.8);assert.ok(carPose(1).x<-.8);assert.ok(Math.abs(carPose(.5).x)<.1);
- assert.equal(carPose(0).z,0);assert.ok(carPose(.5).z>.2);assert.ok(Math.abs(carPose(1).z)<.0001);
+ assert.ok(carPose(0).x>.8);assert.ok(carPose(1).x<-.8);assert.ok(carPose(.5).x<carPose(0).x);
+ assert.equal(carPose(0).z,0);assert.equal(carPose(.5).z,0);assert.ok(Math.abs(carPose(1).z)<.0001);
 });
 test('callout connectors reach their label and reject an invalid projection',async()=>{
  const {calloutGeometry}=await import('../lib/domain/motion.mjs');
@@ -63,4 +63,18 @@ test('overlapping callouts separate vertically within their reading area',async(
  const {followCallouts}=await import('../lib/domain/motion.mjs');const base=[{left:80,top:350,width:160,height:100},{left:120,top:610,width:160,height:100}],reference=[{x:220,y:520},{x:175,y:460}];
  const [a,b]=followCallouts(reference.map(p=>({x:p.x,y:p.y-600})),reference,base,{left:16,right:374,top:340,bottom:714});
  assert.ok(a.top+a.height+12<=b.top);assert.ok(b.top+b.height<=714);
+});
+test('straight drive keeps camera, scale and heading fixed throughout the passage',async()=>{
+ const {carPose}=await import('../lib/domain/motion.mjs');const start=carPose(0);
+ for(const p of [.1,.25,.5,.75,1]){const pose=carPose(p);for(const key of ['rotation','z','scale','cameraHeight','cameraDistance'])assert.equal(pose[key],start[key]);assert.ok(pose.x<start.x);}
+});
+test('callout rectangles reserve the complete car silhouette',async()=>{
+ const {followCallouts}=await import('../lib/domain/motion.mjs');
+ const points=[{x:700,y:600},{x:650,y:500}],base=[{left:250,top:520,width:180,height:100},{left:600,top:550,width:180,height:100}],bounds={left:24,right:1324,top:420,bottom:860},car={left:200,top:450,right:850,bottom:760};
+ const labels=followCallouts(points,points,base,bounds,car);
+ for(const label of labels)assert.ok(label.left+label.width<=car.left-12||label.left>=car.right+12||label.top+label.height<=car.top-12||label.top>=car.bottom+12);
+});
+
+test('wheel trails grow behind the straight passage and rewind to zero',async()=>{
+ const {wheelTrailLength}=await import('../lib/domain/motion.mjs');assert.equal(wheelTrailLength(0),0);assert.ok(wheelTrailLength(.5)>1);assert.ok(wheelTrailLength(1)<=3.4);assert.equal(wheelTrailLength(-1),0);
 });

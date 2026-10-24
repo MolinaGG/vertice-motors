@@ -54,6 +54,31 @@ test('proxy rejects malformed queries before contacting the provider', async () 
   assert.equal((await response.json()).error.code, 'INVALID_QUERY');
 });
 
+test('transport uses the manual redirect mode supported by Cloudflare Workers', async () => {
+  const handler = createFipeHandler({ fetchImpl: async (_url, options) => {
+    // workerd rejects redirect:error synchronously, before starting the request.
+    if (options.redirect !== 'manual') throw new TypeError('Invalid redirect value, must be one of "follow" or "manual"');
+    return json(brands);
+  } });
+  const response = await handler(request());
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { data: brands });
+});
+
+test('upstream redirects are rejected without fetching the location', async () => {
+  const destinations = [], redirectModes = [];
+  const handler = createFipeHandler({ fetchImpl: async (url, options) => {
+    destinations.push(url);
+    redirectModes.push(options.redirect);
+    return new Response(null, { status: 302, headers: { location: 'https://untrusted.example/another-api' } });
+  } });
+  const response = await handler(request());
+  assert.equal(response.status, 503);
+  assert.equal((await response.json()).error.code, 'UNAVAILABLE');
+  assert.deepEqual(destinations, ['https://fipe.parallelum.com.br/api/v2/cars/brands']);
+  assert.deepEqual(redirectModes, ['manual']);
+});
+
 test('proxy coalesces concurrent requests and serves normalized cached data', async () => {
   let release, calls = 0;
   const pending = new Promise(resolve => { release = resolve; });

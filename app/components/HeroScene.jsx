@@ -1,8 +1,8 @@
 'use client';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {ArrowUpRight,ArrowDown,Check} from 'lucide-react';
-import {sceneState,carPose,posterPoint} from '@/lib/domain/motion.mjs';
-import {posterAnchors} from '@/lib/domain/poster.mjs';
+import {sceneState,carPose,posterPoint,wheelTrailLength} from '@/lib/domain/motion.mjs';
+import {posterAnchors,posterWheels,posterBounds} from '@/lib/domain/poster.mjs';
 import CarStage from './CarStage';
 import VehicleAnnotations from './VehicleAnnotations';
 const chapters=[
@@ -16,7 +16,7 @@ export default function HeroScene({discoveryHref='#estoque'}){
  useEffect(()=>{
   const root=track.current,preference=matchMedia('(prefers-reduced-motion: reduce)');let frame=null;
   function update(){frame=null;const reduced=preference.matches||(innerWidth<560&&innerHeight<700),bounds=root.getBoundingClientRect(),state=sceneState(-bounds.top,root.offsetHeight-innerHeight,reduced);latest.current=state.progress;root.style.setProperty('--scene-progress',String(state.progress));root.style.setProperty('--scene-scale',String(state.scale));root.style.setProperty('--scene-shift',`${state.shift}px`);const pose=carPose(state.progress);root.style.setProperty('--poster-travel',`${(pose.x-1.05)*root.clientWidth*(innerWidth<560?.085:.12)}px`);root.style.setProperty('--poster-scale',String(pose.scale));setChapter(current=>current===state.chapter?current:state.chapter);setStaticMode(reduced);const allow3d=!reduced&&!navigator.connection?.saveData;setEnabled(allow3d);if(!allow3d){is3D.current=false;setReady(false);}controller.current?.update(state.progress);projectPoster();}
-  function projectPoster(){if(is3D.current||!poster.current?.naturalWidth)return;setPosterReady(true);const img=poster.current,hero=root.querySelector('.cinema-hero').getBoundingClientRect(),rect=img.getBoundingClientRect(),points=posterAnchors[img.currentSrc.includes('-mobile')?'mobile':'desktop'];const picture=img.parentElement,base={left:hero.left+picture.offsetLeft,top:hero.top+picture.offsetTop,width:picture.clientWidth,height:picture.clientHeight},mapPoint=(point,area)=>{const p=posterPoint(area,img.naturalWidth,img.naturalHeight,point);return {x:p.x-hero.left,y:p.y-hero.top};};annotations.current?.update({points:points.map(point=>mapPoint(point,rect)),reference:points.map(point=>mapPoint(point,base))});}
+  function projectPoster(){if(is3D.current||!poster.current?.naturalWidth)return;setPosterReady(true);const img=poster.current,hero=root.querySelector('.cinema-hero').getBoundingClientRect(),rect=img.getBoundingClientRect(),kind=img.currentSrc.includes('-mobile')?'mobile':'desktop',points=posterAnchors[kind];const picture=img.parentElement,base={left:hero.left+picture.offsetLeft,top:hero.top+picture.offsetTop,width:picture.clientWidth,height:picture.clientHeight},mapPoint=(point,area)=>{const p=posterPoint(area,img.naturalWidth,img.naturalHeight,point);return {x:p.x-hero.left,y:p.y-hero.top};};const boxFor=area=>{const box=posterBounds[kind],a=mapPoint({x:box.left,y:box.top},area),b=mapPoint({x:box.right,y:box.bottom},area);return {left:a.x,top:a.y,right:b.x,bottom:b.y};},length=wheelTrailLength(latest.current);annotations.current?.update({points:points.map(point=>mapPoint(point,rect)),reference:points.map(point=>mapPoint(point,base)),carBounds:boxFor(rect),referenceCarBounds:boxFor(base),trails:posterWheels[kind].map(wheel=>({start:mapPoint(wheel.start,rect),end:mapPoint({x:wheel.start.x+(wheel.unit.x-wheel.start.x)*length,y:wheel.start.y+(wheel.unit.y-wheel.start.y)*length},rect)}))});}
   refreshPoster.current=projectPoster;
   function schedule(){if(frame===null)frame=requestAnimationFrame(update);}window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);preference.addEventListener('change',schedule);schedule();
   return()=>{refreshPoster.current=null;if(frame!==null)cancelAnimationFrame(frame);window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);preference.removeEventListener('change',schedule);};
@@ -26,6 +26,7 @@ export default function HeroScene({discoveryHref='#estoque'}){
  return <div className={`cinema-sequence ${staticMode?'is-static':''} ${enabled&&!failed&&ready?'has-3d':''}`} ref={track}>
   <div className="hero cinema-hero dynamic-hero">
    <img className="hero-city" src="/images/city.webp" alt="" aria-hidden="true" fetchPriority="high" width="1920" height="1080"/>
+   <svg className="wheel-trails" aria-hidden="true" preserveAspectRatio="none"><defs>{[0,1].map(index=><linearGradient key={index} id={`wheel-red-gradient-${index}`} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#ff253c"/><stop offset="1" stopColor="#ff253c" stopOpacity="0"/></linearGradient>)}</defs>{[0,1].map(index=><g className="wheel-trail" key={index}><path className="trail-glow"/><path className="trail-red"/><path className="trail-core"/></g>)}</svg>
    <picture className="car-poster"><source media="(max-width: 560px)" srcSet="/images/car-poster-mobile.webp"/><img ref={poster} src="/images/car-poster-desktop.webp" alt="Carro vermelho ilustrativo da apresentação" width="1348" height="685" onLoad={()=>{setPosterReady(true);refreshPoster.current?.();}}/></picture>
    {enabled&&!failed&&<CarStage controller={controller} progress={latest} annotations={annotations} onReady={sceneReady} onError={sceneError}/>}
    <div className="hero-shade cinema-shade"/>
