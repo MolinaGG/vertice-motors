@@ -111,3 +111,15 @@ Adicionar animação cinematográfica ligada à barra de rolagem e preparar uso 
 Pedido adicional: aplicar ao início a técnica do vídeo 8wjw5lz-7lM, preservando o carrossel aprovado. O usuário aceita um veículo ilustrativo, sem fidelidade a um modelo do estoque. Decisão de implementação delegada: Three.js carregado sob demanda, carro GLB local com licença e créditos, pintura vermelha, estúdio escuro e câmera/rotação ligados à rolagem nativa. Não há custo de geração de vídeo. A foto atual permanece como alternativa durante carregamento, falha, economia de dados ou preferência por movimento reduzido. Não ampliar a cena para o resto da página. Não apresentar o objeto 3D como vista de um carro anunciado.
 
 Alternativas consideradas: vídeo controlado pela rolagem exige produzir e baixar um clipe; foto com zoom não fornece novos ângulos. A cena 3D permite o movimento pedido e mantém controle sobre tamanho e descarte dos recursos.
+
+### Composição e movimento — refinamento pedido
+
+Reorganizar títulos à esquerda e texto/botão à direita no desktop, com veículo central ocupando a faixa inferior. No celular, título no alto e botão na base. Remover a ficha de oferta da abertura para manter a cena ilustrativa independente de um anúncio. Somar deslocamento lateral e em profundidade à rotação; a rolagem reversa repete a trajetória ao contrário. Linhas projetadas a partir de dois pontos 3D acompanham o veículo até chamadas de qualidade e segurança. Conteúdo das chamadas descreve cuidado e informação; não promete inspeção, certificação ou equipamento de um anúncio. Cards continuam legíveis na alternativa fotográfica; conectores são exibidos apenas após renderização 3D válida.
+
+### Fundo urbano e painéis foscos
+
+Pedido adicional: fundo de cidade com composição transparente do carro, mantendo translação e rotação por rolagem. Fundo original gerado para o projeto; painéis pretos foscos com ~72% de opacidade e desfoque discreto, textos brancos. A cena WebGL usa alpha; não há tela verde visível. Para aparelhos sem WebGL, renderizações transparentes do mesmo carro substituem a antiga fotografia, com deslocamento em CSS, preservando a cidade e as anotações. Essa alternativa não simula novas vistas 3D. Manter preferência por movimento reduzido e economia de dados.
+
+### Anúncios em destaque, separados da abertura
+
+Pedido adicional: seção de destaques imediatamente abaixo da experiência cinematográfica. Exibir até três anúncios disponíveis com flag featured, usando exclusivamente seus próprios nomes, versões, anos, fotos, preços, km e câmbio do catálogo; favoritos e ficha detalhada compartilham estado com o restante do site. A administração existente controla featured. Cards em grade desktop e lista horizontal manual no celular. Carrossel de marcas preservado abaixo da nova seção. A abertura não associa o modelo ilustrativo a um anúncio ou preço; CTA e indicação de rolagem conduzem aos destaques.

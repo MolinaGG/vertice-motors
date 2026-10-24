@@ -59,3 +59,11 @@ test('store settings whitelist valid contact destinations',()=>{
  assert.equal(validateSettings({name:'Vértice Motors',address:'Endereço demonstrativo',hours:'Seg a sáb',email:'contato@example.com',whatsapp:'',story:'História fictícia'}).whatsapp,'');
  assert.throws(()=>validateSettings({name:'Loja',email:'bad',whatsapp:'abc'}));
 });
+test('highlights use available marked listings and recover when none are eligible',async()=>{
+ const {selectHighlights}=await import('../lib/domain/catalog.mjs');
+ const vehicles=Array.from({length:6},(_,index)=>({id:String(index),featured:true,status:'available',archived:false}));
+ vehicles[1].status='reserved';vehicles[2].archived=true;
+ assert.deepEqual(selectHighlights(vehicles).map(vehicle=>vehicle.id),['0','3','4']);
+ assert.deepEqual(selectHighlights(vehicles.map(vehicle=>({...vehicle,featured:false}))),[]);
+ assert.equal(vehicles.length,6);
+});

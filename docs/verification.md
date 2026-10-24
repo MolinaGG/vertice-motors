@@ -21,3 +21,9 @@ Produção inicial: API do catálogo retornou 12 veículos persistentes; adminis
 Carrossel mobile: navegação por teclado validada em viewport de 390px para Volkswagen, Chevrolet, Fiat, Hyundai, Nissan e Renault; todas as logos permaneceram focadas e integralmente visíveis. Suíte final da extensão: 24/24 testes aprovados.
 
 Abertura 3D: 25/25 testes Node; TypeScript sem erros. GLB final HB20 inspecionado por CPU: 41 meshes, 137.978 triângulos, dimensões 1,86 × 1,59 × 3,94 antes da normalização; três poses renderizadas offline e inspecionadas. Corrigidos prontidão ao recriar cena e enquadramento contínuo por proporção. WebGL desativado no navegador cloud impediu validar os shaders/luzes e a fluidez em GPU; fallback fotográfico desktop e 390px, capítulo 2 em progresso 0,48 e CTA para estoque observados. Não foi habilitado WebGL por fora da plataforma. A renderização offline usa iluminação simplificada e não comprova a aparência WebGL final.
+
+Composição urbana/refinamento: 28 testes Node aprovados, incluindo translação x/z, conectores inválidos e letterboxing contain. Browser observou fundo/carro transparente/painéis desktop e 390px, correção de prontidão com cache e conectores acompanhando deslocamento -159,8px na cena2. Destaques abaixo da abertura exibem Onix/HB20/Polo com próprios anúncios; card do Onix abriu ficha correta a R$62.900. A alternativa sem WebGL usa poster transparente em movimento CSS; sua vista não gira. Movimento 3D real, shaders e desempenho GPU não puderam ser vistos no browser cloud (WebGL Disabled).
+
+Destaques no celular: o último card (Polo) foi alcançado pela lista horizontal, abriu a ficha a R$68.900 e voltou ao card; o carrossel de marcas permaneceu operacional abaixo da seleção.
+
+Verificação final: 29/29 testes; TypeScript sem erros. Regressão coberta: ao não haver destaques elegíveis, o CTA cinematográfico leva ao estoque, preservando navegação. Sem contas administrativas adicionais e sem mutação de dados para QA.

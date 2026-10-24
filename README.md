@@ -69,4 +69,6 @@ Supabase Free pode pausar por baixa atividade; monitore armazenamento e tráfego
 
 ### Abertura 3D gratuita
 
-A abertura carrega Three.js sob demanda e apresenta um carro ilustrativo que gira e muda de enquadramento conforme a rolagem. O movimento é implementado em JavaScript nativo; não depende de GSAP, Higgsfield nem APIs pagas. Respeita movimento reduzido e economia de dados e preserva uma foto alternativa quando WebGL está indisponível. Não é uma vista 3D de um anúncio. Modelo e licença: [créditos](public/models/CREDITS.md), também disponíveis em `/creditos` no site. O carrossel de marcas foi preservado.
+A abertura carrega Three.js sob demanda e apresenta um carro ilustrativo que gira e muda de enquadramento conforme a rolagem. O movimento é implementado em JavaScript nativo; não depende de GSAP, Higgsfield nem APIs pagas. Respeita movimento reduzido e economia de dados e preserva uma renderização transparente do mesmo carro, com deslocamento CSS, quando WebGL está indisponível. Não é uma vista 3D de um anúncio. Modelo e licença: [créditos](public/models/CREDITS.md), também disponíveis em `/creditos` no site. O carrossel de marcas foi preservado.
+
+A composição urbana usa um fundo original gerado por IA e painéis pretos foscos translúcidos. As chamadas de qualidade e segurança acompanham pontos do carro por conectores SVG. Logo abaixo, a seção de destaques usa anúncios disponíveis marcados no painel, com fotos e dados próprios, sem associar o modelo da abertura a um anúncio.
