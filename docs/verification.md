@@ -1,0 +1,21 @@
+# Verificação da entrega — 24/10/2026
+
+- 21 testes Node: cálculos Price com taxa positiva/zero, entrada integral e valores vazios; filtros combinados e acentos; URLs inválidas; comparação até 3; consentimento, datas e contatos; tipos de imagem; identidades não autorizadas; autenticação de máquina; upload idempotente e falhas de armazenamento.
+- Checagem TypeScript e build de produção executados durante a preparação da publicação.
+- Gateway real: token inválido negado, catálogo com 12 veículos, leitura e escrita administrativas sem autorização negadas, bootstrap sem contexto privado negado, contato persistido e reenvio idempotente.
+- Browser QA: abertura desktop e iframe de 390px; filtros Fiat + até R$60 mil retornam Argo e Mobi; favorito persiste no navegador; galeria alterna as vistas; comparação HB20/Onix exibe informações lado a lado; R$48 mil em 48 parcelas a 0% retorna R$1 mil por mês.
+- Diálogo: reproduzido Escape fechando editor ocupado; corrigido com política nativa de fechamento, prevenção de cancelamento e bloqueio do botão/backdrop. Verificado aberto durante salvamento e removido após liberação.
+- Revisão independente: 3 achados importantes corrigidos (entrada vazia, Escape ocupado, duplicação por reenvio de upload); corrigida também a recuperação de imagem que falhou e exibido o total das parcelas previsto na especificação.
+- RLS habilitado nas 7 tabelas do projeto. Advisor sem alertas Critical/Warn; 5 avisos INFO de RLS sem políticas são intencionais para tabelas privadas, com permissões cliente revogadas. Referência: https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy
+- A inspeção de segurança do código assume o comportamento documentado da plataforma: cabeçalhos de identidade são inseridos pela hospedagem e o primeiro setup ocorre exclusivamente na audiência owner-private confirmada.
+- Credenciais e dados de solicitações não integram o repositório. Fotos são ilustrativas.
+
+A ativação do administrador real requer o primeiro acesso autenticado do proprietário em `/admin`. Isso não é feito por uma identidade de teste. A publicação, audiência e resultado do GitHub são confirmados separadamente pelos respectivos serviços.
+
+O controle automático de aprovação recusou criar uma identidade administrativa temporária para QA, por ampliar o acesso além do proprietário. A concessão não foi realizada e não se tentou contornar o bloqueio. Testes de domínio, autorização negativa e revisão independente permaneceram disponíveis; a validação positiva completa do painel autenticado depende do primeiro acesso do proprietário.
+
+Extensão de movimento: 3 testes adicionais verificam progresso/clamping, movimento reduzido e sequência de marcas. A cena 2 foi observada no navegador com progresso ~0,48. Revisão independente da extensão identificou foco de teclado fora da área visível do carrossel; reproduzido com Volkswagen fora da máscara e corrigido por modo estacionário rolável durante foco visível. A solução gratuita usa JavaScript/CSS; vídeo Higgsfield é opcional e não foi gerado.
+
+Produção inicial: API do catálogo retornou 12 veículos persistentes; administração sem identidade retornou 401; gravação de origem externa retornou 403, sem registros adicionais.
+
+Carrossel mobile: navegação por teclado validada em viewport de 390px para Volkswagen, Chevrolet, Fiat, Hyundai, Nissan e Renault; todas as logos permaneceram focadas e integralmente visíveis. Suíte final da extensão: 24/24 testes aprovados.

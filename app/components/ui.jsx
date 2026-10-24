@@ -1,0 +1,18 @@
+'use client';
+import {useEffect,useRef} from 'react';
+import {X,ArrowUpRight,ChevronLeft,ChevronRight} from 'lucide-react';
+export const money=value=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(Number(value)||0);
+export const number=value=>new Intl.NumberFormat('pt-BR').format(Number(value)||0);
+export function Brand(){return <span className="brand"><svg viewBox="0 0 38 38" aria-hidden="true"><path d="M3 5h9l8 20L29 5h7L22 34h-7Z" fill="currentColor"/><path d="m16 5 4 10 4-10Z" fill="#e3272d"/></svg><span>VÉRTICE<small>MOTORS</small></span></span>;}
+export function ArrowLink({children,...props}){return <a {...props} className={`arrow-link ${props.className||''}`}>{children}<ArrowUpRight size={18}/></a>;}
+export function Modal({title,children,onClose,wide=false,className='',dismissible=true}){
+ const ref=useRef(null);const closeRef=useRef(onClose);closeRef.current=onClose;const dismissRef=useRef(dismissible);dismissRef.current=dismissible;
+ useEffect(()=>{const dialog=ref.current,previous=document.activeElement;dialog.showModal();const close=()=>closeRef.current(),cancel=e=>{if(!dismissRef.current)e.preventDefault();},key=e=>{if(e.key==='Escape'&&!dismissRef.current){e.preventDefault();e.stopPropagation();}};dialog.addEventListener('close',close);dialog.addEventListener('cancel',cancel);dialog.addEventListener('keydown',key,true);document.body.classList.add('modal-open');return()=>{dialog.removeEventListener('close',close);dialog.removeEventListener('cancel',cancel);dialog.removeEventListener('keydown',key,true);dialog.close();document.body.classList.remove('modal-open');previous?.focus?.();};},[]);
+ return <dialog ref={ref} closedby={dismissible?'closerequest':'none'} className={`modal ${wide?'modal-wide':''} ${className}`} aria-label={title} onCancel={e=>{if(!dismissible)e.preventDefault();}} onClick={e=>{if(dismissible&&e.target===e.currentTarget)onClose();}}><div className="modal-content"><button autoFocus disabled={!dismissible} className="icon-button modal-close" aria-label="Fechar janela" onClick={()=>{if(dismissible)onClose();}}><X size={21}/></button>{children}</div></dialog>;
+}
+export function Photo({src,alt,...rest}){const [failed,setFailed]=requireState(false);useEffect(()=>setFailed(false),[src]);return <div className={`photo-wrap ${rest.className||''} ${failed?'photo-unavailable':''}`}><img key={src} src={src} alt={alt} {...rest} className="" style={{visibility:failed?'hidden':undefined}} onError={()=>setFailed(true)} onLoad={()=>setFailed(false)}/><span className="photo-error">Imagem ilustrativa indisponível</span></div>;}
+export function Gallery({vehicle}){
+ const [index,setIndex]=requireState(0);const photos=vehicle.photos||[];
+ return <div className="gallery"><div className="gallery-main">{photos[index]?<Photo src={photos[index]} alt={`${vehicle.brand} ${vehicle.model} — vista ilustrativa ${index+1}`} width="1200" height="800"/>:<div className="no-photo">Imagem a adicionar</div>}{photos.length>1&&<><button className="icon-button gallery-prev" aria-label="Foto anterior" onClick={()=>setIndex((index-1+photos.length)%photos.length)}><ChevronLeft/></button><button className="icon-button gallery-next" aria-label="Próxima foto" onClick={()=>setIndex((index+1)%photos.length)}><ChevronRight/></button></>}<span className="image-caption">IMAGEM ILUSTRATIVA · {photos.length?index+1:0}/{photos.length}</span></div>{photos.length>1&&<div className="gallery-thumbs">{photos.map((src,i)=><button key={src} aria-label={`Ver foto ${i+1}`} aria-pressed={index===i} onClick={()=>setIndex(i)}><img src={src} alt="" width="120" height="80" loading="lazy"/></button>)}</div>}</div>;
+}
+import {useState as requireState} from 'react';

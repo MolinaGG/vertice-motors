@@ -1,0 +1,3 @@
+import {adminIdentity,adminAction,gateway,reply,failure,config} from '@/lib/server';
+export async function GET(){try{const state=await adminIdentity();if(state.is_admin)return reply({...(await gateway('adminState',{},state.user)),user:{displayName:state.user.displayName},authorized:true});return reply({authorized:false,can_setup:!state.initialized&&config().VERTICE_PRIVATE_OWNER_SETUP==='true',user:{displayName:state.user.displayName}},state.initialized?403:200);}catch(e){return failure(e);}}
+export async function POST(request:Request){try{return reply(await adminAction(request));}catch(e){return failure(e);}}
