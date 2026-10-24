@@ -19,3 +19,5 @@ Extensão de movimento: 3 testes adicionais verificam progresso/clamping, movime
 Produção inicial: API do catálogo retornou 12 veículos persistentes; administração sem identidade retornou 401; gravação de origem externa retornou 403, sem registros adicionais.
 
 Carrossel mobile: navegação por teclado validada em viewport de 390px para Volkswagen, Chevrolet, Fiat, Hyundai, Nissan e Renault; todas as logos permaneceram focadas e integralmente visíveis. Suíte final da extensão: 24/24 testes aprovados.
+
+Abertura 3D: 25/25 testes Node; TypeScript sem erros. GLB final HB20 inspecionado por CPU: 41 meshes, 137.978 triângulos, dimensões 1,86 × 1,59 × 3,94 antes da normalização; três poses renderizadas offline e inspecionadas. Corrigidos prontidão ao recriar cena e enquadramento contínuo por proporção. WebGL desativado no navegador cloud impediu validar os shaders/luzes e a fluidez em GPU; fallback fotográfico desktop e 390px, capítulo 2 em progresso 0,48 e CTA para estoque observados. Não foi habilitado WebGL por fora da plataforma. A renderização offline usa iluminação simplificada e não comprova a aparência WebGL final.

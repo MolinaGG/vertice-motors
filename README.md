@@ -66,3 +66,7 @@ O script de QA nunca recebe segredos em argumentos ou os grava em arquivos. Não
 ## Limites
 
 Supabase Free pode pausar por baixa atividade; monitore armazenamento e tráfego conforme o uso. Não há garantia de disponibilidade comercial neste ambiente de demonstração. Não envie dados pessoais reais aos formulários. A abertura pública, domínio próprio, e-mail transacional e integração com WhatsApp podem ser configurados em uma etapa posterior.
+
+### Abertura 3D gratuita
+
+A abertura carrega Three.js sob demanda e apresenta um carro ilustrativo que gira e muda de enquadramento conforme a rolagem. O movimento é implementado em JavaScript nativo; não depende de GSAP, Higgsfield nem APIs pagas. Respeita movimento reduzido e economia de dados e preserva uma foto alternativa quando WebGL está indisponível. Não é uma vista 3D de um anúncio. Modelo e licença: [créditos](public/models/CREDITS.md), também disponíveis em `/creditos` no site. O carrossel de marcas foi preservado.

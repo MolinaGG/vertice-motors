@@ -105,3 +105,9 @@ Pendências operacionais resolvíveis durante a execução: configurar identidad
 ## Extensão solicitada pelo usuário durante a implementação
 
 Adicionar animação cinematográfica ligada à barra de rolagem e preparar uso de um clipe do Higgsfield. A cena usa rolagem nativa, enquadramento progressivo, três momentos de texto e suporte a movimento reduzido; o vídeo real depende da conexão da conta Higgsfield e dos créditos necessários. Substituir a faixa estática de nomes por carrossel com logos de Volkswagen, Chevrolet, Fiat, Hyundai, Nissan e Renault, pausa por mouse/foco/controle e atalhos ao estoque da marca.
+
+## Abertura 3D — referência de rolagem
+
+Pedido adicional: aplicar ao início a técnica do vídeo 8wjw5lz-7lM, preservando o carrossel aprovado. O usuário aceita um veículo ilustrativo, sem fidelidade a um modelo do estoque. Decisão de implementação delegada: Three.js carregado sob demanda, carro GLB local com licença e créditos, pintura vermelha, estúdio escuro e câmera/rotação ligados à rolagem nativa. Não há custo de geração de vídeo. A foto atual permanece como alternativa durante carregamento, falha, economia de dados ou preferência por movimento reduzido. Não ampliar a cena para o resto da página. Não apresentar o objeto 3D como vista de um carro anunciado.
+
+Alternativas consideradas: vídeo controlado pela rolagem exige produzir e baixar um clipe; foto com zoom não fornece novos ângulos. A cena 3D permite o movimento pedido e mantém controle sobre tamanho e descarte dos recursos.
