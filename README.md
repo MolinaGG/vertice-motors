@@ -72,3 +72,11 @@ Supabase Free pode pausar por baixa atividade; monitore armazenamento e tráfego
 A abertura carrega Three.js sob demanda e apresenta um carro ilustrativo que gira e muda de enquadramento conforme a rolagem. O movimento é implementado em JavaScript nativo; não depende de GSAP, Higgsfield nem APIs pagas. Respeita movimento reduzido e economia de dados e preserva uma renderização transparente do mesmo carro, com deslocamento CSS, quando WebGL está indisponível. Não é uma vista 3D de um anúncio. Modelo e licença: [créditos](public/models/CREDITS.md), também disponíveis em `/creditos` no site. O carrossel de marcas foi preservado.
 
 A composição urbana usa um fundo original gerado por IA e painéis pretos foscos translúcidos. As chamadas de qualidade e segurança acompanham pontos do carro por conectores SVG. Logo abaixo, a seção de destaques usa anúncios disponíveis marcados no painel, com fotos e dados próprios, sem associar o modelo da abertura a um anúncio.
+
+### Consulta FIPE
+
+A página `/fipe`, integrada ao menu, consulta marcas, modelos, anos/combustíveis e valores reais pelo serviço independente Fipe API v2 de Deivid Fortuna. A API não é oficial da Fundação FIPE. O acesso sem token tem limite documentado de 500 requisições/dia; não há cadastro, assinatura ou cobrança configurada. O servidor usa destino fixo, valida respostas, limita cache/concor­rência e trata indisponibilidade sem inventar valores. O cache é por instância e não garante quota global. Referências: https://deividfortuna.github.io/fipe/v2/ e https://www.fipe.org.br/pt-br/indices/veiculos/.
+
+### Compartilhar a demonstração
+
+A audiência atual é exclusiva do proprietário. Para abrir a visualização a outras pessoas: primeiro entre em `/admin` com a conta proprietária e ative a administração; depois desabilite `VERTICE_PRIVATE_OWNER_SETUP` na hospedagem e publique essa revisão de ambiente. Só então amplie a audiência para link público ou convites individuais. O painel e as gravações administrativas continuam exigindo a identidade cadastrada. Não compartilhar a audiência enquanto o primeiro cadastro administrativo estiver aberto.

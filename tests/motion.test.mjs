@@ -44,3 +44,23 @@ test('transparent poster anchors preserve contain letterboxing',async()=>{
  assert.deepEqual(posterPoint(rect,800,400,{x:0,y:0}),{x:20,y:130});
  assert.deepEqual(posterPoint(rect,800,400,{x:1,y:1}),{x:420,y:330});
 });
+test('labels follow projected anchors and retrace their starting position',async()=>{
+ const {followCallouts}=await import('../lib/domain/motion.mjs');
+ const base=[{left:260,top:540,width:180,height:100},{left:1020,top:520,width:180,height:100}],reference=[{x:800,y:600},{x:700,y:500}],bounds={left:20,right:1320,top:420,bottom:850};
+ const start=followCallouts(reference,reference,base,bounds),moved=followCallouts(reference.map(p=>({x:p.x-140,y:p.y+20})),reference,base,bounds);
+ assert.equal(moved[0].left-start[0].left,-140);assert.equal(moved[1].left-start[1].left,-140);assert.equal(moved[0].top-start[0].top,20);
+ assert.deepEqual(followCallouts(reference,reference,base,bounds),start);
+});
+test('following labels stay inside a compact viewport without colliding',async()=>{
+ const {followCallouts}=await import('../lib/domain/motion.mjs');
+ const base=[{left:120,top:350,width:160,height:100},{left:200,top:610,width:160,height:100}],reference=[{x:220,y:520},{x:175,y:460}],bounds={left:16,right:374,top:340,bottom:714};
+ const placed=followCallouts([{x:-100,y:650},{x:900,y:200}],reference,base,bounds);
+ for(const box of placed){assert.ok(box.left>=bounds.left&&box.left+box.width<=bounds.right);assert.ok(box.top>=bounds.top&&box.top+box.height<=bounds.bottom);}
+ const [a,b]=placed;assert.ok(a.left+a.width+12<=b.left||b.left+b.width+12<=a.left||a.top+a.height+12<=b.top||b.top+b.height+12<=a.top);
+});
+
+test('overlapping callouts separate vertically within their reading area',async()=>{
+ const {followCallouts}=await import('../lib/domain/motion.mjs');const base=[{left:80,top:350,width:160,height:100},{left:120,top:610,width:160,height:100}],reference=[{x:220,y:520},{x:175,y:460}];
+ const [a,b]=followCallouts(reference.map(p=>({x:p.x,y:p.y-600})),reference,base,{left:16,right:374,top:340,bottom:714});
+ assert.ok(a.top+a.height+12<=b.top);assert.ok(b.top+b.height<=714);
+});

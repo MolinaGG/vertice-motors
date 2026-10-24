@@ -27,3 +27,5 @@ Composição urbana/refinamento: 28 testes Node aprovados, incluindo translaçã
 Destaques no celular: o último card (Polo) foi alcançado pela lista horizontal, abriu a ficha a R$68.900 e voltou ao card; o carrossel de marcas permaneceu operacional abaixo da seleção.
 
 Verificação final: 29/29 testes; TypeScript sem erros. Regressão coberta: ao não haver destaques elegíveis, o CTA cinematográfico leva ao estoque, preservando navegação. Sem contas administrativas adicionais e sem mutação de dados para QA.
+
+Extensão FIPE/sincronia:44/44testes, TypeScript e sintaxe3D aprovados. Revisões independentes de projeção/cartões e proxy/UI FIPE semCritical/Important. WebGL não foi habilitado no browsercloud; movimento e legibilidade da alternativa leve conferidos em1348px e390px. FIPE validada pelo handler realNode com108marcas e fluxo de referência real. A prévia gerenciada apresentou errode acesso externo, tratado com mensagem e linkoficial; navegação interna compatível corrigida com linksnativos. A visualização privada permanece igual; não foi criada identidadeadministrativa nem ampliadoacesso.

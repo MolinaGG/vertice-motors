@@ -123,3 +123,9 @@ Pedido adicional: fundo de cidade com composição transparente do carro, manten
 ### Anúncios em destaque, separados da abertura
 
 Pedido adicional: seção de destaques imediatamente abaixo da experiência cinematográfica. Exibir até três anúncios disponíveis com flag featured, usando exclusivamente seus próprios nomes, versões, anos, fotos, preços, km e câmbio do catálogo; favoritos e ficha detalhada compartilham estado com o restante do site. A administração existente controla featured. Cards em grade desktop e lista horizontal manual no celular. Carrossel de marcas preservado abaixo da nova seção. A abertura não associa o modelo ilustrativo a um anúncio ou preço; CTA e indicação de rolagem conduzem aos destaques.
+
+### Elementos ligados ao veículo e página FIPE
+
+Pedido: retângulos e linhas acompanham o carro para manter harmonia. Chamadas de qualidade/segurança usam o deslocamento de seus próprios pontos projetados em relação à pose inicial, com limites de leitura e prevenção de sobreposição. Textos principais e CTA acompanham o centro da projeção com amplitude discreta. Mesma referência determinística para WebGL e poster transparente; a volta da rolagem recupera as posições. Movimento reduzido mantém apresentação estática.
+
+Pedido adicional: /fipe integrada, gratuita, por marca/modelo/ano, valor real e mês referência; serviço independente da FIPE, sem associar versões automaticamente aos anúncios fictícios. Serviço público de Deivid Fortuna v2, sem token e sem assinatura paga, limite documentado de500 requisições/dia; proxy restrito com cache e estado de indisponibilidade sem valores inventados. Link para consulta oficial. Compartilhamento explicado em separado: audiência permanece privada até decisão do proprietário; primeiro administrador deve ser ativado antes de ampliar acesso. Leitura do banco confirmou0 administradores, sem mudança de permissões.
