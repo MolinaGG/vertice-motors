@@ -3,6 +3,7 @@
 import {verifyToken,isAdmin,canBootstrap,authorizedAction,inspectImage} from '../../../lib/domain/access.mjs';
 import {validateVehicle,validateLead,validateSettings} from '../../../lib/domain/validation.mjs';
 import {uploadAndAttachPhoto} from '../../../lib/domain/photos.mjs';
+import {AccountError,isAccountAction,handleAccountAction} from '../../../lib/domain/account.mjs';
 declare const Deno: any;
 const origin=Deno.env.get('SUPABASE_URL');
 const key=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
@@ -28,6 +29,9 @@ Deno.serve(async(req:Request)=>{
   const raw=await req.text();if(raw.length>7500000)return json({error:'Arquivo muito grande.'},413);
   let body:any;try{body=JSON.parse(raw);}catch{return json({error:'Solicitação inválida.'},400);}
   const {action,payload={},actor=null}=body;
+  // The machine token was checked above. These private actions trust only the
+  // Sites actor supplied by our server, and never infer owner identity from data.
+  if(isAccountAction(action))return json(await handleAccountAction(action,payload,actor,{rest}));
   const admins=await rest('vertice_admins?id=eq.1');const admin=admins[0];const allowed=isAdmin(actor,admin);
   if(action==='authState')return json({is_admin:allowed,initialized:!!admin});
   if(action==='bootstrapAdmin'){
@@ -82,5 +86,5 @@ Deno.serve(async(req:Request)=>{
    const r=await fetch(`${origin}/storage/v1/object/vertice-vehicle-images`,{method:'DELETE',headers:baseHeaders,body:JSON.stringify({prefixes:[path]})});if(!r.ok)throw new HttpError(502,'Não foi possível remover a imagem.');await audit(actor,'deletePhoto',path);return json({ok:true});
   }
   throw new HttpError(400,'Operação desconhecida.');
- }catch(e:any){const status=e instanceof HttpError?e.status:400;return json({error:e instanceof HttpError?e.message:typeof e?.message==='string'?e.message.slice(0,200):'Solicitação inválida.'},status);}
+ }catch(e:any){const status=e instanceof HttpError||e instanceof AccountError?e.status:400;return json({error:e instanceof HttpError||e instanceof AccountError?e.message:typeof e?.message==='string'?e.message.slice(0,200):'Solicitação inválida.'},status);}
 });

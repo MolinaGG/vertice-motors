@@ -9,7 +9,7 @@ Revenda **fictícia** de seminovos, com direção visual cinematográfica em ver
 - Abertura cinematográfica com três momentos ligados à rolagem, feita gratuitamente com JavaScript/CSS; carrossel de logos com pausa e atalhos por marca.
 - Três seções na mesma página: Explore os carros, Estoque disponível e Nossa loja.
 - 12 veículos ilustrativos, com duas fotografias geradas por IA para cada um.
-- Filtros combináveis, ordenação, favoritos locais, comparação de até três veículos e links compartilháveis.
+- Filtros combináveis, ordenação, favoritos por conta, comparação de até três veículos e links compartilháveis.
 - Ficha completa, galeria e simulador Price com entrada, prazo, taxa e totais editáveis.
 - Contatos e solicitações de test-drive gravados somente após validação e consentimento.
 - Painel para criar, editar e arquivar veículos, enviar/remover imagens, acompanhar solicitações e editar informações da loja.
@@ -69,7 +69,7 @@ Supabase Free pode pausar por baixa atividade; monitore armazenamento e tráfego
 
 ### Abertura 3D gratuita
 
-A abertura carrega Three.js sob demanda e apresenta um carro ilustrativo que gira e muda de enquadramento conforme a rolagem. O movimento é implementado em JavaScript nativo; não depende de GSAP, Higgsfield nem APIs pagas. Respeita movimento reduzido e economia de dados e preserva uma renderização transparente do mesmo carro, com deslocamento CSS, quando WebGL está indisponível. Não é uma vista 3D de um anúncio. Modelo e licença: [créditos](public/models/CREDITS.md), também disponíveis em `/creditos` no site. O carrossel de marcas foi preservado.
+A abertura carrega Three.js sob demanda e apresenta um carro ilustrativo que atravessa a tela em uma trajetória reta conforme a rolagem, com ângulo fixo alinhado à rua, amortecimento de movimento, quatro rodas girando pela distância percorrida e rastros vermelhos. O movimento é implementado em JavaScript nativo; não depende de GSAP, Higgsfield nem APIs pagas. Respeita movimento reduzido e economia de dados e preserva uma renderização transparente do mesmo carro, com deslocamento CSS, quando WebGL está indisponível. Não é uma vista 3D de um anúncio. Modelo e licença: [créditos](public/models/CREDITS.md), também disponíveis em `/creditos` no site. O carrossel de marcas foi preservado.
 
 A composição urbana usa um fundo original gerado por IA e painéis pretos foscos translúcidos. As chamadas de qualidade e segurança acompanham pontos do carro por conectores SVG. Logo abaixo, a seção de destaques usa anúncios disponíveis marcados no painel, com fotos e dados próprios, sem associar o modelo da abertura a um anúncio.
 
@@ -80,3 +80,9 @@ A página `/fipe`, integrada ao menu, consulta marcas, modelos, anos/combustíve
 ### Compartilhar a demonstração
 
 A audiência atual é exclusiva do proprietário. Para abrir a visualização a outras pessoas: primeiro entre em `/admin` com a conta proprietária e ative a administração; depois desabilite `VERTICE_PRIVATE_OWNER_SETUP` na hospedagem e publique essa revisão de ambiente. Só então amplie a audiência para link público ou convites individuais. O painel e as gravações administrativas continuam exigindo a identidade cadastrada. Não compartilhar a audiência enquanto o primeiro cadastro administrativo estiver aberto.
+
+### Minha garagem
+
+A página `/minha-garagem` usa a identidade autenticada do Sites/ChatGPT. O servidor associa favoritos e consultas FIPE reais ao identificador opaco do visitante, sem senhas adicionais. Cada conta só acessa seus próprios registros. O gateway privado usa o token de máquina já configurado; nenhuma credencial Supabase é enviada ao navegador. As duas tabelas têm RLS habilitado e acesso direto do browser revogado.
+
+Favoritos só são confirmados após persistência; a importação da antiga lista local é opcional e exige revisão explícita. O histórico deduplica consultas por veículo/referência e conserva as 50 últimas, com exclusão individual ou completa. Falhas ou limites FIPE não criam registros. Uma consulta válida continua visível se o salvamento falhar, com aviso. A migração aplicada está em `supabase/migrations/20261024192641_vertice_user_garage.sql`.
