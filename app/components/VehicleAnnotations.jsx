@@ -26,21 +26,21 @@ export default function VehicleAnnotations({bridge,ready,chapter}){
    projection.trails?.forEach((trail,index)=>{const valid=[trail.start.x,trail.start.y,trail.end.x,trail.end.y].every(Number.isFinite),length=Math.hypot(trail.end.x-trail.start.x,trail.end.y-trail.start.y);visibleTrail ||=valid&&length>1;const gradient=trails?.querySelector(`#wheel-red-gradient-${index}`);if(gradient&&valid){gradient.setAttribute('x1',String(trail.start.x));gradient.setAttribute('y1',String(trail.start.y));gradient.setAttribute('x2',String(trail.end.x));gradient.setAttribute('y2',String(trail.end.y));}trails?.querySelectorAll(`.wheel-trail:nth-of-type(${index+1}) path`).forEach(path=>path.setAttribute('d',valid?`M${trail.start.x},${trail.start.y} L${trail.end.x},${trail.end.y}`:''));});
    if(trails)trails.style.opacity=visibleTrail?'1':'0';
    const dx=points.reduce((sum,p,i)=>sum+p.x-reference[i].x,0)/points.length,dy=points.reduce((sum,p,i)=>sum+p.y-reference[i].y,0)/points.length;
+   hero.style.setProperty('--guide-scale',String(.7+.3*Math.min(1,Math.abs(dx)/(width*.3))));
    hero.style.setProperty('--copy-x',`${limit(dx*(compact?.1:.2),compact?8:48)}px`);
    hero.style.setProperty('--copy-y',`${limit(dy*.12,compact?5:14)}px`);
   }
   function measure(){
    const width=node.clientWidth,height=node.clientHeight,compact=width<=560,copy=hero.querySelector('.hero-content');
    const base=labels.current.map(label=>({left:label.offsetLeft,top:label.offsetTop,width:label.offsetWidth,height:label.offsetHeight}));
-   let textBottom;
-   if(compact){const panel=getComputedStyle(copy,'::before');textBottom=parseFloat(panel.top)+parseFloat(panel.height);}
-   else textBottom=Math.max(...[...copy.children].map(panel=>panel.offsetTop+panel.offsetHeight));
+   const copyBounds=copy.getBoundingClientRect(),textPanels=hero.querySelectorAll(compact?'.hero-title,.hero-intro>p':'.hero-title,.hero-intro');
+   const textBottom=Math.max(...[...textPanels].map(panel=>panel.getBoundingClientRect().bottom-copyBounds.top));
    const caption=hero.querySelector('.scene-caption');
    layout={width,height,base,compact,bounds:{left:compact?16:24,right:width-(compact?16:24),top:textBottom+(compact?18:30),bottom:caption.offsetTop-20}};
    svg.setAttribute('viewBox',`0 0 ${width} ${height}`);hero.querySelector('.wheel-trails')?.setAttribute('viewBox',`0 0 ${width} ${height}`);if(last.current)draw(last.current);
   }
   const observer=new ResizeObserver(measure);observer.observe(node);labels.current.forEach(label=>observer.observe(label));
-  hero.querySelectorAll('.hero-title,.hero-intro').forEach(panel=>observer.observe(panel));
+  hero.querySelectorAll('.hero-title,.hero-intro,.hero-intro>p').forEach(panel=>observer.observe(panel));
   const controller={update:draw};bridge.current=controller;measure();
   return()=>{observer.disconnect();if(bridge.current===controller)bridge.current=null;};
  },[bridge,chapter]);

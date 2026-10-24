@@ -31,7 +31,7 @@ export default function HeroScene({discoveryHref='#estoque'}){
    {enabled&&!failed&&<CarStage controller={controller} progress={latest} annotations={annotations} onReady={sceneReady} onError={sceneError}/>}
    <div className="hero-shade cinema-shade"/>
    <div className="hero-content" key={chapter}>
-    <div className="hero-title"><div className="eyebrow hero-eyebrow"><i/>{data.eyebrow}</div><h1>{data.lines[0]}<br/><em>{data.lines[1]}</em></h1></div>
+    <div className="hero-title"><div className="eyebrow hero-eyebrow"><i/>{data.eyebrow}</div><h1><span className="hero-headline-line">{data.lines[0]}</span>{' '}<em className="hero-headline-line">{data.lines[1]}</em></h1></div>
     <div className="hero-intro"><p>{data.copy}</p><a href={discoveryHref} className="button button-red hero-cta">Explore os carros<ArrowUpRight size={21}/></a><div className="hero-assurance"><span><Check size={13}/>Informação clara</span><span><Check size={13}/>Escolha no seu tempo</span></div></div>
    </div>
    <VehicleAnnotations chapter={chapter} bridge={annotations} ready={(enabled&&!failed&&ready)||posterReady}/>
